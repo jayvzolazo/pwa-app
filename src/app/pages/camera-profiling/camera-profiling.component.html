@@ -1,0 +1,61 @@
+<div class="row">
+  <div class="col camera-container">
+    <div class="mb-3">
+      <div class="webcam-container" *ngIf="!webcamImage && showWebcam">
+        <webcam [width]="signatureCanvasWidth" [height]="height" [trigger]="triggerObservable"
+          [allowCameraSwitch]="allowCameraSwitch" [switchCamera]="nextWebcamObservable" [videoOptions]="videoOptions"
+          [imageQuality]="1" [captureImageData]="true" (cameraSwitched)="cameraWasSwitched($event)"
+          (initError)="handleInitError($event)" (imageCapture)="handleImage($event)"></webcam>
+      </div>
+      <div class="snapshot" *ngIf="webcamImage && !showWebcam">
+        <img [src]="webcamImage.imageAsDataUrl" [ngStyle]="{'max-width.px': signatureCanvasWidth}" />
+      </div>
+    </div>
+    <div class="align-center mb-3" *ngIf="!webcamImage && showWebcam">
+      <button type="button" class="btn btn-primary" (click)="triggerSnapshot()">Take a Picture</button>
+    </div>
+    <div class="align-center mb-3" *ngIf="webcamImage && !showWebcam">
+      <div class="mb-3">
+        <button type="button" class="btn btn-sm btn-outline-warning" (click)="triggerSnapshotAgain()">Take a Picture
+          Again</button>
+      </div>
+      <div class="mb-3">
+        <a [download]="imageFileName + '.jpg'" [href]="webcamImage.imageAsDataUrl"
+          class="btn btn-sm btn-outline-primary">Save Picture as JPG</a>&nbsp;&nbsp;
+        <a [download]="imageFileName + '.png'" [href]="webcamImage.imageAsDataUrl"
+          class="btn btn-sm btn-outline-primary">Save Picture as PNG</a>
+      </div>
+    </div>
+    <div class="signature-pad-container mb-4">
+      <!-- signature pad -->
+      <p class="text-left">Signature:</p>
+      <div id="wrapper" class="wrapper mb-3">
+        <ngx-signature-pad #signaturePad [options]="options" [width]="signatureCanvasWidth" [height]="height">
+        </ngx-signature-pad>
+      </div>
+      <div class="mb-3">
+        <form class="form-inline">
+          <label class="my-1 mr-2">Save Type</label>
+          <div class="custom-control custom-radio custom-control-inline">
+            <input type="radio" id="customRadioInline1" name="customRadioInline1" class="custom-control-input"
+              (change)="changeOptions(imageType.png)" checked>
+            <label class="custom-control-label" for="customRadioInline1">PNG</label>
+          </div>
+          <div class="custom-control custom-radio custom-control-inline">
+            <input type="radio" id="customRadioInline2" name="customRadioInline1" class="custom-control-input"
+              (change)="changeOptions(imageType.jpg)">
+            <label class="custom-control-label" for="customRadioInline2">JPG</label>
+          </div>
+        </form>
+      </div>
+      <div class="sign-controls align-center">
+        <button class="btn btn-sm btn-outline-primary" (click)="saveSignature()">Save Signature</button>&nbsp;&nbsp;
+        <!-- <button class="btn btn-sm btn-outline-primary" (click)="saveJpg()">Save as JPG</button>&nbsp;&nbsp; -->
+        <!-- <button class="btn btn-outline-primary" (click)="saveArray()">Save to Array</button>&nbsp;&nbsp; -->
+        <!-- <button class="btn btn-outline-primary" (click)="isEmpty()"></button>&nbsp;&nbsp; -->
+        <button class="btn btn-sm btn-outline-primary" (click)="undoSign()">Undo</button>&nbsp;&nbsp;
+        <button class="btn btn-sm btn-outline-warning" (click)="clear()">Clear</button>
+      </div>
+    </div>
+  </div>
+</div>
